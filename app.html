@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarePlus Hospital</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+    color: #26334d;
+    min-height: 100vh;
+}
+
+header {
+    background: linear-gradient(120deg, #4338ca, #7c3aed, #db2777);
+    color: white;
+    padding: 25px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h1 { font-size: 27px; }
+header p { margin-top: 7px; opacity: .9; }
+
+.badge {
+    background: #ffffff25;
+    padding: 10px 16px;
+    border-radius: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h2 { margin-bottom: 8px; }
+.welcome p { color: #64748b; }
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 23px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #4338ca12;
+    border-bottom: 4px solid #8b5cf6;
+}
+
+.stat-card p {
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.stat-card h2 {
+    font-size: 32px;
+    color: #5b21b6;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 22px;
+}
+
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #4338ca12;
+    min-width: 0;
+}
+
+.panel h3 {
+    margin-bottom: 20px;
+    color: #4c1d95;
+}
+
+label {
+    display: block;
+    margin: 13px 0 7px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd6fe;
+    border-radius: 9px;
+    outline: none;
+    background: #fafaff;
+    font-size: 14px;
+}
+
+input:focus, select:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px #8b5cf620;
+}
+
+button {
+    border: none;
+    border-radius: 9px;
+    padding: 12px 17px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: .2s;
+}
+
+button:hover { opacity: .85; transform: translateY(-1px); }
+
+.primary {
+    width: 100%;
+    margin-top: 20px;
+    color: white;
+    background: linear-gradient(120deg, #4f46e5, #9333ea);
+}
+
+.search {
+    margin-bottom: 18px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th, td {
+    text-align: left;
+    padding: 13px 10px;
+    border-bottom: 1px solid #f1f0fa;
+}
+
+th {
+    background: #f5f3ff;
+    color: #5b21b6;
+}
+
+.status {
+    color: #047857;
+    background: #d1fae5;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.delete {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 7px 10px;
+}
+
+.empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 25px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+}
+
+@media (max-width: 800px) {
+    .content { grid-template-columns: 1fr; }
+    header { padding: 22px 5%; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>✚ CarePlus Hospital</h1>
+        <p>Hospital Management Dashboard</p>
+    </div>
+    <div class="badge">● Hospital Portal</div>
+</header>
+
+<div class="container">
+
+    <section class="welcome">
+        <h2>Welcome to CarePlus 👋</h2>
+        <p>Manage patients and appointments in one place.</p>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <p>👥 Total Patients</p>
+            <h2 id="patientCount">0</h2>
+        </div>
+        <div class="stat-card">
+            <p>📅 Total Appointments</p>
+            <h2 id="appointmentCount">0</h2>
+        </div>
+        <div class="stat-card">
+            <p>🩺 Doctors Available</p>
+            <h2>4</h2>
+        </div>
+        <div class="stat-card">
+            <p>🏥 Departments</p>
+            <h2>4</h2>
+        </div>
+    </section>
+
+    <section class="content">
+
+        <div class="panel">
+            <h3>➕ Register Patient</h3>
+
+            <form id="patientForm">
+                <label for="name">Patient Name</label>
+                <input id="name" type="text"
+                       placeholder="Enter patient name" required>
+
+                <label for="age">Age</label>
+                <input id="age" type="number"
+                       min="0" max="120"
+                       placeholder="Enter age" required>
+
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="">Select gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+
+                <label for="doctor">Select Doctor</label>
+                <select id="doctor" required>
+                    <option value="">Choose a doctor</option>
+                    <option>Dr. Arun - General</option>
+                    <option>Dr. Priya - Cardiology</option>
+                    <option>Dr. Rahul - Orthopedics</option>
+                    <option>Dr. Sneha - Pediatrics</option>
+                </select>
+
+                <label for="date">Appointment Date</label>
+                <input id="date" type="date" required>
+
+                <button class="primary" type="submit">
+                    Register Patient
+                </button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>📋 Patient Records</h3>
+
+            <input class="search" id="search"
+                   type="text"
+                   placeholder="🔍 Search patients by name...">
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientTable">
+                        <tr>
+                            <td colspan="5" class="empty">
+                                No patients registered yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    © 2026 CarePlus Hospital | Simple Hospital Management System
+</footer>
+
+<script>
+const form = document.getElementById("patientForm");
+const table = document.getElementById("patientTable");
+const search = document.getElementById("search");
+
+let patients = [];
+
+try {
+    patients = JSON.parse(
+        localStorage.getItem("carePlusPatients")
+    ) || [];
+} catch (error) {
+    patients = [];
+}
+
+document.getElementById("date").min =
+    new Date().toLocaleDateString("en-CA");
+
+function savePatients() {
+    localStorage.setItem(
+        "carePlusPatients",
+        JSON.stringify(patients)
+    );
+}
+
+function updateDashboard() {
+    document.getElementById("patientCount").textContent =
+        patients.length;
+
+    document.getElementById("appointmentCount").textContent =
+        patients.length;
+}
+
+function renderPatients() {
+    table.replaceChildren();
+
+    const keyword = search.value.toLowerCase();
+
+    const filtered = patients.filter(patient =>
+        patient.name.toLowerCase().includes(keyword)
+    );
+
+    if (filtered.length === 0) {
+        const row = table.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 5;
+        cell.className = "empty";
+        cell.textContent = patients.length
+            ? "No matching patients found."
+            : "No patients registered yet.";
+    }
+
+    filtered.forEach(patient => {
+        const row = table.insertRow();
+
+        const values = [
+            patient.id,
+            patient.name,
+            patient.doctor,
+            patient.date
+        ];
+
+        values.forEach(value => {
+            const cell = row.insertCell();
+            cell.textContent = value;
+        });
+
+        const actionCell = row.insertCell();
+
+        const button = document.createElement("button");
+        button.className = "delete";
+        button.textContent = "Delete";
+
+        button.addEventListener("click", () => {
+            if (confirm("Delete this patient record?")) {
+                patients = patients.filter(
+                    p => p.id !== patient.id
+                );
+
+                savePatients();
+                updateDashboard();
+                renderPatients();
+            }
+        });
+
+        actionCell.appendChild(button);
+    });
+}
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const age = Number(document.getElementById("age").value);
+    const gender = document.getElementById("gender").value;
+    const doctor = document.getElementById("doctor").value;
+    const date = document.getElementById("date").value;
+
+    if (!name || !gender || !doctor || !date ||
+        age < 0 || age > 120 || !Number.isInteger(age)) {
+        alert("Please enter valid patient details.");
+        return;
+    }
+
+    const patient = {
+        id: patients.length
+            ? Math.max(...patients.map(p => p.id)) + 1
+            : 1,
+        name,
+        age,
+        gender,
+        doctor,
+        date
+    };
+
+    patients.push(patient);
+    savePatients();
+    updateDashboard();
+
+    search.value = "";
+    renderPatients();
+    form.reset();
+
+    alert("Patient registered successfully!");
+});
+
+search.addEventListener("input", renderPatients);
+
+updateDashboard();
+renderPatients();
+</script>
+
+</body>
+</html>
+
